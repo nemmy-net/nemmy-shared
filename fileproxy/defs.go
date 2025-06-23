@@ -2,13 +2,19 @@ package fileproxy
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 )
 
 const (
 	HOOK_POST_UPLOAD = "post-upload"
+	HOOK_PRE_UPLOAD  = "pre-upload"
+
 	HEADER_SIGNATURE = "Fdb-Signature"
+	HEADER_TOKEN     = "Fdb-Token"
 )
+
+var ErrBadSignature = errors.New(HEADER_SIGNATURE + " header is invalid")
 
 type HookRequest struct {
 	Type     string          // One of the `HOOK_` consts
@@ -16,7 +22,10 @@ type HookRequest struct {
 	UserData json.RawMessage // The same string passed to TokenRequest
 }
 type HookResponse struct {
-	HttpOverride bool // Override the HTTP response if true, otherwise all Http fields are ignored
+	// Override the HTTP response if true, otherwise all Http fields are ignored.
+	// Mostly used when rejecting uploads. Only the last-ran hook can decide the response.
+	// (An override from `pre-upload` is always ignored if `post-upload` runs after)
+	HttpOverride bool
 	HttpStatus   int
 	HttpHeaders  http.Header
 	HttpBody     string
