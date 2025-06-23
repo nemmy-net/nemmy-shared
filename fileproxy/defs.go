@@ -1,18 +1,24 @@
 package fileproxy
 
+import (
+	"encoding/json"
+	"net/http"
+)
+
 const (
 	HOOK_POST_UPLOAD = "post-upload"
+	HEADER_SIGNATURE = "Fdb-Signature"
 )
 
 type HookRequest struct {
-	Type     string // One of the `HOOK_` consts
-	TokenId  string // The token used
-	UserData string // The same string passed to TokenRequest
+	Type     string          // One of the `HOOK_` consts
+	TokenId  string          // The token used
+	UserData json.RawMessage // The same string passed to TokenRequest
 }
 type HookResponse struct {
 	HttpOverride bool // Override the HTTP response if true, otherwise all Http fields are ignored
 	HttpStatus   int
-	HttpHeaders  map[string][]string
+	HttpHeaders  http.Header
 	HttpBody     string
 	// Cancel and delete the upload.
 	// If this upload is overwriting a file, then that file is deleted.
@@ -25,7 +31,7 @@ type TokenRequest struct {
 	ContentType        string
 	ContentDisposition string
 	Expire             int64
-	Userdata           string
+	UserData           json.RawMessage
 }
 type TokenResponse struct {
 	Token string
