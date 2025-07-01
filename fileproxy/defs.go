@@ -11,7 +11,6 @@ const (
 	HOOK_PRE_UPLOAD  = "pre-upload"
 
 	HEADER_SIGNATURE = "Fdb-Signature"
-	HEADER_TOKEN     = "Fdb-Token"
 )
 
 var ErrBadSignature = errors.New(HEADER_SIGNATURE + " header is invalid")
@@ -46,7 +45,13 @@ type TokenResponse struct {
 	Token string
 }
 
-type ImageInfo struct {
+type DeleteRequest struct {
+	Key string
+}
+type DeleteResponse = DeleteRequest
+type ImageInfoRequest = DeleteRequest
+
+type ImageInfoResponse struct {
 	Width  int64
 	Height int64
 }
