@@ -13,5 +13,13 @@ func Test_Filename(t *testing.T) {
 		t.Fatal()
 	} else if SanitizeFileName("Filer-Server-API#filer-server") != "Filer-Server-API_filer-server" {
 		t.Fatal()
+	} else if !IsValidFileKey("test/key") {
+		t.Fatal()
+	} else if IsValidFileKey("test//key") {
+		t.Fatal()
+	} else if IsValidFileKey("/test/key") {
+		t.Fatal()
+	} else if IsValidFileKey("test/key/") {
+		t.Fatal()
 	}
 }
