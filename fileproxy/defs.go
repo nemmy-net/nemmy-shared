@@ -55,3 +55,8 @@ type ImageInfoResponse struct {
 	Width  int64
 	Height int64
 }
+
+type CopyRequest struct {
+	SrcKey string
+	DstKey string
+}
