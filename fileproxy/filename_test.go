@@ -21,5 +21,7 @@ func Test_Filename(t *testing.T) {
 		t.Fatal()
 	} else if IsValidFileKey("test/key/") {
 		t.Fatal()
+	} else if IsValidFileName("") {
+		t.Fatal()
 	}
 }

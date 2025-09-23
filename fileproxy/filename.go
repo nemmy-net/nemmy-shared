@@ -23,7 +23,7 @@ func SanitizeFileName(name string) string {
 // File keys look like paths and may have (non-consecutive) forward slashes.
 // A leading or trailing slash is forbidden.
 func IsValidFileKey(key string) bool {
-	if len(key) > 0 && key[0] == '/' || key[len(key)-1] == '/' {
+	if len(key) == 0 || key[0] == '/' || key[len(key)-1] == '/' {
 		return false
 	}
 
@@ -41,6 +41,10 @@ func IsValidFileKey(key string) bool {
 }
 
 func IsValidFileName(name string) bool {
+	if name == "" {
+		return false
+	}
+
 	for i := range len(name) {
 		if !IsValidFileNameByte(name[i]) {
 			return false
