@@ -38,7 +38,7 @@ type TokenRequest struct {
 	ContentLength      int64
 	ContentType        string
 	ContentDisposition string
-	Expire             int64
+	Expire             int64 // Milliseconds since unix epoch
 	UserData           json.RawMessage
 }
 type TokenResponse struct {
