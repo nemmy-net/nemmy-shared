@@ -1,6 +1,9 @@
 package fileproxy
 
-import "testing"
+import (
+	"mime"
+	"testing"
+)
 
 func Test_Filename(t *testing.T) {
 	if IsValidFileName("a/b") {
@@ -23,5 +26,41 @@ func Test_Filename(t *testing.T) {
 		t.Fatal()
 	} else if IsValidFileName("") {
 		t.Fatal()
+	}
+}
+
+func Test_NovlVersion(t *testing.T) {
+	sample := "application/x-nemmy-novl;version=2.5.6"
+	mediaType, params, err := mime.ParseMediaType(sample)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	info, ok := ParseNovlInfo(mediaType, params)
+	if !ok {
+		t.Fatal("Failed to parse novl info")
+	}
+	if info.Major != 2 || info.Minor != 5 || info.Patch != 6 {
+		t.Fatalf("Expected 2.5.6, got %v.%v.%v", info.Major, info.Minor, info.Patch)
+	}
+
+	sample = "application/x-nemmy-novl;version=1.2.3"
+	mediaType, params, err = mime.ParseMediaType(sample)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	info, ok = ParseNovlInfo(mediaType, params)
+	if !ok {
+		t.Fatal("Failed to parse novl info")
+	}
+	if info.Major != 1 || info.Minor != 2 || info.Patch != 3 {
+		t.Fatalf("Expected 1.2.3, got %v.%v.%v", info.Major, info.Minor, info.Patch)
+	}
+
+	if _, ok := ParseNovlVersion("1"); ok {
+		t.Fatal("Expected invalid version")
+	} else if _, ok := ParseNovlVersion("1.a"); ok {
+		t.Fatal("Expected invalid version")
 	}
 }

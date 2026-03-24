@@ -1,6 +1,9 @@
 package fileproxy
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 const _MISC_FILE_CHARS = "!-_.'()"
 
@@ -63,4 +66,44 @@ func IsValidFileNameByte(b byte) bool {
 		}
 	}
 	return false
+}
+
+type NovlVersion struct {
+	Major int64
+	Minor int64
+	Patch int64
+}
+
+func ParseNovlVersion(str string) (version NovlVersion, ok bool) {
+	var parts [3]int64
+	for i := range 3 {
+		substr := str
+		if i != 2 {
+			dot := strings.IndexByte(str, '.')
+			if dot == -1 {
+				return version, false
+			}
+			substr = str[:dot]
+			str = str[dot+1:]
+		}
+		value, err := strconv.ParseUint(substr, 10, 32)
+		if err != nil {
+			return version, false
+		}
+		parts[i] = int64(value)
+	}
+	return NovlVersion{
+		Major: parts[0],
+		Minor: parts[1],
+		Patch: parts[2],
+	}, true
+}
+
+// Returns true if the info was parsed.
+// `mediaType` and `params` should be the result of [mime.ParseMediaType]
+func ParseNovlInfo(mediaType string, params map[string]string) (version NovlVersion, ok bool) {
+	if mediaType != "application/x-nemmy-novl" {
+		return version, false
+	}
+	return ParseNovlVersion(params["version"])
 }
