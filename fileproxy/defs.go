@@ -60,3 +60,6 @@ type CopyRequest struct {
 	SrcKey string
 	DstKey string
 }
+
+type RenameRequest = CopyRequest
+type RenameResponse = CopyRequest
