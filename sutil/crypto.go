@@ -40,7 +40,7 @@ func MakeOrLoadKey(filename string, makeKey bool) []byte {
 		}
 
 		key := MakeKey()
-		file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0)
+		file, err := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0o700)
 		if file != nil {
 			defer file.Close()
 		}
